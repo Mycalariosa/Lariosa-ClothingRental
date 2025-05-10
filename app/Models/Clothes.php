@@ -9,7 +9,12 @@ class Clothes extends Model
 {
     use HasFactory;
 
-    protected $table = 'clothes';
+    protected $table = 'clothes'; // Optional: specify table name if it doesn't match the model name
+
+    protected $primaryKey = 'clothes_id'; // Set the custom primary key
+
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'brand',
