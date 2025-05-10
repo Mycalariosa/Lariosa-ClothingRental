@@ -26,21 +26,25 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        $users = [
-            
-                'user_fname' => 'Admin',
-                'user_lname' => 'Admin',
-                'user_email' => 'admin@gmail.com',
-                'user_username' => 'admin',
-                'user_password' => Hash::make('password'),
-                'role_id' => 1,
-                'status_id' => 1,
-            ];
 
-            foreach($users as $users){
-                User::create($users);
-            }
-    }  
+        // Insert admin user after creating the table
+        $users = [
+            [
+                'first_name' => 'Admin',
+                'last_name' => 'Admin',
+                'email' => 'admin@gmail.com',
+                'user_contact_number' => null,
+                'password' => Hash::make('password'),
+                'role_id' => 1,
+                'user_status_id' => 1,
+            ]
+        ];
+
+        // Insert admin user
+        foreach ($users as $user) {
+            User::create($user);
+        }
+    }
 
     /**
      * Reverse the migrations.
