@@ -9,5 +9,16 @@ class UserStatus extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'user_status_id'; // Set the custom primary key
+
     protected $fillable = ['name'];
+    public $timestamps = true;
+
+    /**
+     * Define relationship with User.
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'user_status_id');
+    }
 }

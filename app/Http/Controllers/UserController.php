@@ -12,8 +12,8 @@ class UserController extends Controller
     // ✅ Get all users with their roles and statuses
     public function getUsers()
     {
-        $users = User::with('role', 'userStatus')->get();
-        return response()->json(['users' => $users]);
+        $users = User::with('role', 'userStatus')->get(); // Fetch users with relationships
+        return response()->json(['data' => $users], 200); // Return users as JSON
     }
 
     // ➕ Add a new user
@@ -22,12 +22,14 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'user_contact_number' => 'required|string|max:20',
+            'user_contact_number' => 'required|digits:11', // Ensure exactly 11 digits
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
-            'role_id' => 'required|exists:roles,id',
-            'user_status_id' => 'required|exists:user_statuses,id',
         ]);
+
+        // Assign default role_id and user_status_id if not provided
+        $roleId = $request->input('role_id', 2); // Default to 'Customer' role
+        $userStatusId = $request->input('user_status_id', 1); // Default to 'Active' status
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -35,11 +37,11 @@ class UserController extends Controller
             'user_contact_number' => $request->user_contact_number,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $request->role_id,
-            'user_status_id' => $request->user_status_id,
+            'role_id' => $roleId,
+            'user_status_id' => $userStatusId,
         ]);
 
-        return response()->json(['message' => 'User successfully created!', 'user' => $user]);
+        return response()->json(['message' => 'User successfully created!', 'data' => $user], 201);
     }
 
     // ✏️ Edit an existing user
@@ -54,7 +56,7 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'user_contact_number' => 'required|string|max:20',
+            'user_contact_number' => 'required|digits:11', // Ensure exactly 11 digits
             'email' => [
                 'required',
                 'email',
@@ -74,7 +76,7 @@ class UserController extends Controller
             'user_status_id' => $request->user_status_id,
         ]);
 
-        return response()->json(['message' => 'User updated successfully.', 'user' => $user]);
+        return response()->json(['message' => 'User updated successfully.', 'data' => $user], 200);
     }
 
     // ❌ Delete user
@@ -88,6 +90,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json(['message' => 'User deleted successfully.']);
+        return response()->json(['message' => 'User deleted successfully.'], 200);
     }
 }

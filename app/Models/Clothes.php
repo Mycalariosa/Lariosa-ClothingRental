@@ -16,6 +16,8 @@ class Clothes extends Model
     public $incrementing = true;
     protected $keyType = 'int';
 
+    public $timestamps = true;
+
     protected $fillable = [
         'brand',
         'category',
@@ -25,4 +27,12 @@ class Clothes extends Model
         'material',
         'description',
     ];
+
+    /**
+     * Define relationship with RentalApp.
+     */
+    public function rentals()
+    {
+        return $this->hasMany(RentalApp::class, 'clothes_id');
+    }
 }
