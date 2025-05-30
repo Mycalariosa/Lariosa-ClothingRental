@@ -11,7 +11,10 @@ class UserStatus extends Model
 
     protected $primaryKey = 'user_status_id'; // Set the custom primary key
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'id',
+        'status'
+    ];
     public $timestamps = true;
 
     /**
@@ -19,6 +22,6 @@ class UserStatus extends Model
      */
     public function users()
     {
-        return $this->hasMany(User::class, 'user_status_id');
+        return $this->hasMany(User::class);
     }
 }
