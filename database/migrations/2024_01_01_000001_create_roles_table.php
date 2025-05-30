@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -24,7 +24,11 @@ return new class extends Migration
         ];
 
         foreach($roles as $role){
-            Role::create($role);
+            DB::table('roles')->insert([
+                'name' => $role['name'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
         }
     }
 

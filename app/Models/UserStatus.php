@@ -9,11 +9,8 @@ class UserStatus extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'user_status_id'; // Set the custom primary key
-
     protected $fillable = [
-        'id',
-        'status'
+        'name'
     ];
     public $timestamps = true;
 

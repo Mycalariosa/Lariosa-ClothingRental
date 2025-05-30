@@ -24,7 +24,6 @@ class RentalAppController extends Controller
             'return_date' => 'required|date|after_or_equal:rental_date',
             'payment_method' => 'required|string|max:100',
             'total_payment' => 'required|numeric|min:0',
-            // 'rental_status_id' => 'required|exists:rental_stats,rental_id', // Make optional
         ]);
 
         $data = $request->all();
@@ -52,17 +51,23 @@ class RentalAppController extends Controller
 
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'clothes_id' => 'required|exists:clothes,id',
+            'clothes_id' => 'required|exists:clothes,clothes_id',
             'rental_date' => 'required|date',
             'return_date' => 'required|date|after_or_equal:rental_date',
             'payment_method' => 'required|string|max:100',
             'total_payment' => 'required|numeric|min:0',
-            'rental_status_id' => 'required|exists:rental_stats,id',
+            'rental_status_id' => 'required|exists:rental_stats,rental_id',
         ]);
 
         $rental->update($request->all());
 
-        return response()->json(['message' => 'Rental updated successfully.', 'rental' => $rental]);
+        // Reload the rental with its relationships
+        $updatedRental = RentalApp::with('user', 'clothes', 'rentalStatus')->find($id);
+
+        return response()->json([
+            'message' => 'Rental updated successfully.',
+            'rental' => $updatedRental
+        ]);
     }
 
     // ❌ Delete rental
